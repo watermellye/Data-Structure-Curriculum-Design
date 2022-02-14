@@ -1,0 +1,304 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>数据结构课设</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="../static/assets/css/main.css" />
+    <link rel="shortcut icon" href="static/img/favicon.png">
+    <noscript>
+        <link rel="stylesheet" href="../static/assets/css/noscript.css" />
+    </noscript>
+    <style>
+        .example {
+            box-sizing: border-box;
+            background: #EEEEEE;
+            box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.1) inset;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+        }
+    </style>
+    <script src="https://libs.baidu.com/jquery/1.3.2/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            //添加窗口尺寸改变响应监听
+            $(window).resize(resizeCanvas);
+            //页面加载后先设置一下canvas大小
+            resizeCanvas();
+        });
+
+        //窗口尺寸改变响应（修改canvas大小）
+        function resizeCanvas() {
+            $("#springyDemo").attr("width", Math.max($("form").width(), $("#mstp").width()));
+            $("#springyDemo").attr("height", Math.ceil($("form").width() / 16 * 9));
+            $("#springyKrus").attr("width", $("#mstp").width());
+            $("#springyKrus").attr("height", Math.ceil($(window).height() / 2.5));
+            $("#springyPrim").attr("width", $("#mstp").width());
+            $("#springyPrim").attr("height", Math.ceil($(window).height() / 2.5));
+        };
+    </script>
+</head>
+
+<body class="is-preload">
+    <!-- Wrapper-->
+    <div id="wrapper">
+
+        <!-- Nav -->
+        <nav id="nav">
+            <a href="#" class="icon solid fa-home"><span>输入图</span></a>
+            <a href="#ljb" class="icon solid fa-bars"><span>邻接表</span></a>
+            <a href="#mst" class="icon solid fa-tree" id="mstButton"><span>最小生成树</span></a>
+            <a href="#dijkstra" class="icon solid fa-road"><span>单源最短路</span></a>
+            <a href="#floyd" class="icon solid fa-chart-bar"><span>多源最短路</span></a>
+            <a href="#topo" class="icon solid fa-puzzle-piece"><span>产品装配</span></a>
+        </nav>
+
+        <!-- Main -->
+        <div id="main">
+
+            <!-- Me -->
+            <article id="home" class="panel">
+                <header>
+                    <h1>请输入一张图</h1>
+                    <p>点数和边数空缺将自动统计；起终点允许为非数字字符。</p>
+                </header>
+                <section>
+                    <canvas id="springyDemo" name="springyDemo" class="example" />
+                </section>
+                <form action="#" method="post">
+                    <div>
+                        <div class="row">
+                            <div class="col-6 col-12-medium">
+                                <input type="text" name="name" placeholder="点数" />
+                            </div>
+                            <div class="col-6 col-12-medium">
+                                <input type="text" name="email" placeholder="边数" />
+                            </div>
+                            <div class="col-12">
+                                <input type="text" name="dir" placeholder="有向图输入1，无向图输入0（缺省为1）" />
+                            </div>
+                            <div class="col-12">
+                                <textarea name="message" placeholder="每行三个值分别为起点、终点、边长(缺省为1)，用空格隔开"
+                                    rows="6">{{ message }}</textarea>
+                            </div>
+                            <div class="col-12">
+                                <input type="text" name="startPoint" placeholder="最短路起点，或要维修的零件（缺省为输入的第一个值）" />
+                            </div>
+                            <div class="col-12">
+                                <input type="submit" value="提交" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <iframe id="iframe" name="iframe" style="display:none;"></iframe>
+
+
+
+
+
+            </article>
+
+            <!-- Work -->
+            <article id="ljb" class="panel">
+                <header>
+                    <h2>邻接表</h2>
+                    <p>展示该图在邻接表中的存储状况</p>
+                </header>
+                <section>
+                    <form action="#" method="post">
+                        <div>
+                            <div class="col-12">
+                                <textarea rows="6" disabled="disabled">{{ ljbOutp }}</textarea>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+            </article>
+
+            <!-- mst -->
+            <article id="mst" class="panel">
+                <header>
+                    <h2>最小生成树</h2>
+                    <p id="mstp" name="mstp">prim和kruskal算法生成MST过程演示</p>
+                </header>
+                <section>
+                    <div>
+                        <p style="margin:0px 0px 0px" id="primShow">Prim</p>
+                    </div>
+                    <canvas id="springyPrim" name="springyPrim" class="example" />
+                </section>
+                <section>
+                    <div>
+                        <p style="margin:0px 0px 0px" id="krusShow">Kruskal</p>
+                    </div>
+                    <canvas id="springyKrus" name="springyKrus" class="example" />
+                </section>
+            </article>
+
+            <!-- dijkstra -->
+            <article id="dijkstra" class="panel">
+                <header>
+                    <h2>单源最短路</h2>
+                    <p>给出某一确定顶点到所有其它顶点的最短路径</p>
+                </header>
+                <section>
+                    <form action="#" method="post">
+                        <div>
+                            <div class="col-12">
+                                <textarea rows="6" disabled="disabled">{{ dijkOutp }}</textarea>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+            </article>
+
+            <!-- floyd -->
+            <article id="floyd" class="panel">
+                <header>
+                    <h2>多源最短路</h2>
+                    <p>从第一列顶点到第一行顶点的最短路长度</p>
+                </header>
+                <section>
+                    <form action="#" method="post">
+                        <div>
+                            <div class="col-12">
+                                <textarea rows="18" disabled="disabled"
+                                    style="font-size: xx-small; font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New,monospace;">{{ floydOutp }}</textarea>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+            </article>
+
+            <!-- topo -->
+            <article id="topo" class="panel">
+                <header>
+                    <h2>产品装配</h2>
+                    <p>指定需替换的零部件，规划拆解路径和安装路径。</p>
+                </header>
+                <section>
+                    <form action="#" method="post">
+                        <div>
+                            <div class="col-12">
+                                <textarea rows="4" disabled="disabled">{{ topoOutp }}</textarea>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+            </article>
+
+        </div>
+
+        <!-- Footer -->
+        <div id="footer">
+            <ul class="copyright">
+                <li>1950084 陈泓仰</li>
+                <li>数据结构课程设计</li>
+            </ul>
+        </div>
+
+    </div>
+
+
+    <!-- Scripts -->
+    <script src="../static/assets/js/jquery.min.js"></script>
+    <script src="../static/assets/js/browser.min.js"></script>
+    <script src="../static/assets/js/breakpoints.min.js"></script>
+    <script src="../static/assets/js/util.js"></script>
+    <script src="../static/assets/js/main.js"></script>
+    <script src="../static/springy.js"></script>
+    <script src="../static/springyui.js"></script>
+
+    <script>
+        var flaskJSON = '{{ graphJSON | safe }}'
+        jQuery(function () {
+            var graph = new Springy.Graph();
+            if (flaskJSON) {
+                graph.loadJSON(flaskJSON);
+                document.getElementById("springyDemo").style.display = "inline"
+            }
+            else {
+                document.getElementById("springyDemo").style.display = "none"
+            }
+            var springy = jQuery('#springyDemo').springy({
+                graph: graph
+            });
+        });
+
+        document.getElementById("mstButton").onclick = function () {
+            var primOutp = '{{ primOutp | safe }}'
+            jQuery(function () {
+                var graphPrim = new Springy.Graph();
+                if (primOutp) {
+                    primOutp = JSON.parse(primOutp);
+                    var count = Object.keys(primOutp).length
+                    var i = 0
+                    clearInterval(timer)
+                    var timer = setInterval(() => {
+                        $("#springyPrim").attr("width", $("#mstp").width());
+                        $("#springyPrim").attr("height", Math.ceil($(window).height() / 2.5));
+                        i++
+                        if (i > count) {
+                            document.getElementById("primShow").textContent = "Prim"
+                            clearInterval(timer)
+                        } else {
+                            graphPrim.addNodes(primOutp[i][0])
+                            graphPrim.addNodes(primOutp[i][1])
+                            if (primOutp[i][2] == '1') {
+                                graphPrim.addEdges([primOutp[i][0], primOutp[i][1]])
+                            }
+                            else {
+                                graphPrim.addEdges([primOutp[i][0], primOutp[i][1], { label: primOutp[i][2] }])
+                            }
+                            var springy = jQuery('#springyPrim').springy({
+                                graph: graphPrim
+                            });
+                            primShowText = "Prim / 当前加入的边为：" + primOutp[i][0] + " - " + primOutp[i][1] + " (weight=" + primOutp[i][2] + ")"
+                            document.getElementById("primShow").textContent = primShowText
+                        }
+                    }, 2000);
+                }
+            });
+
+            var krusOutp = '{{ krusOutp | safe }}'
+            jQuery(function () {
+                var graphKrus = new Springy.Graph();
+                if (krusOutp) {
+                    krusOutp = JSON.parse(krusOutp);
+                    var count = Object.keys(krusOutp).length
+                    var i = 0
+                    clearInterval(timer)
+                    var timer = setInterval(() => {
+                        $("#springyKrus").attr("width", $("#mstp").width());
+                        $("#springyKrus").attr("height", Math.ceil($(window).height() / 2.5));
+                        i++
+                        if (i > count) {
+                            document.getElementById("krusShow").textContent = "Kruskal"
+                            clearInterval(timer)
+                        } else {
+                            graphKrus.addNodes(krusOutp[i][0])
+                            graphKrus.addNodes(krusOutp[i][1])
+                            if (krusOutp[i][2] == '1') {
+                                graphKrus.addEdges([krusOutp[i][0], krusOutp[i][1]])
+                            }
+                            else {
+                                graphKrus.addEdges([krusOutp[i][0], krusOutp[i][1], { label: krusOutp[i][2] }])
+                            }
+                            var springy = jQuery('#springyKrus').springy({
+                                graph: graphKrus
+                            });
+                            krusShowText = "Kruskal / 当前加入的边为：" + krusOutp[i][0] + " - " + krusOutp[i][1] + " (weight=" + krusOutp[i][2] + ")"
+                            document.getElementById("krusShow").textContent = krusShowText
+                        }
+                    }, 2000);
+                }
+            });
+        }
+
+    </script>
+
+</body>
+
+</html>
